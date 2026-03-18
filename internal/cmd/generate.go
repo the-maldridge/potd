@@ -1,0 +1,61 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/google/uuid"
+	"github.com/spf13/cobra"
+
+	"github.com/the-maldridge/potd/pkg/password"
+)
+
+var (
+	generateCmd = &cobra.Command{
+		Use:   "generate",
+		Short: "generate a random password, optionally applying it",
+		Long:  generateCmdLongDocs,
+		Run:   generateCmdRun,
+	}
+
+	generateCmdLongDocs = `potd generate
+
+The generate command generates a random password string and can
+optionally apply it to a shadow file (by default /etc/shadow).
+
+Several password modes are supported and can be specified by their
+mode number:
+
+  1 - Random Hexadecimal String
+`
+	generateCmdPasswdSize      int
+	generateCmdPasswdMode      uint8
+	generateCmdModifyShadow    bool
+	generateCmdShadowFile      string
+	generateCmdSharedTokenFile string
+)
+
+func init() {
+	generateCmd.Flags().IntVarP(&generateCmdPasswdSize, "size", "s", 24, "Size of the password to generate")
+	generateCmd.Flags().Uint8VarP(&generateCmdPasswdMode, "mode", "m", 1, "Mode of password generation")
+	generateCmd.Flags().BoolVarP(&generateCmdModifyShadow, "apply-shadow", "w", false, "Modify the shadow file")
+	generateCmd.Flags().StringVarP(&generateCmdShadowFile, "shadow", "f", "/etc/shadow", "Shadow file location")
+	generateCmd.Flags().StringVarP(&generateCmdSharedTokenFile, "shared-token", "t", "/usr/share/potd/shared_token", "Shared token file location")
+	rootCmd.AddCommand(generateCmd)
+}
+
+func generateCmdRun(c *cobra.Command, args []string) {
+	name, _ := os.Hostname()
+	token := uuid.New().String()
+
+	content, err := os.ReadFile(generateCmdSharedTokenFile)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error reading shared token file: %s\n", err)
+		os.Exit(1)
+	}
+	components := []string{name, token, string(content)}
+
+	p := password.New(components, password.Mode(generateCmdPasswdMode), generateCmdPasswdSize)
+	fmt.Println("Password: ", p)
+	fmt.Println("Token: ", token)
+}
