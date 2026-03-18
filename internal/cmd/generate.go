@@ -32,6 +32,7 @@ mode number:
 	generateCmdPasswdMode      uint8
 	generateCmdModifyShadow    bool
 	generateCmdShadowFile      string
+	generateCmdShadowUser      string
 	generateCmdSharedTokenFile string
 )
 
@@ -41,6 +42,7 @@ func init() {
 	generateCmd.Flags().BoolVarP(&generateCmdModifyShadow, "apply-shadow", "w", false, "Modify the shadow file")
 	generateCmd.Flags().StringVarP(&generateCmdShadowFile, "shadow", "f", "/etc/shadow", "Shadow file location")
 	generateCmd.Flags().StringVarP(&generateCmdSharedTokenFile, "shared-token", "t", "/usr/share/potd/shared_token", "Shared token file location")
+	generateCmd.Flags().StringVarP(&generateCmdShadowUser, "user", "u", "root", "User to update")
 	rootCmd.AddCommand(generateCmd)
 }
 
@@ -58,4 +60,11 @@ func generateCmdRun(c *cobra.Command, args []string) {
 	p := password.New(components, password.Mode(generateCmdPasswdMode), generateCmdPasswdSize)
 	fmt.Println("Password: ", p)
 	fmt.Println("Token: ", token)
+	if !generateCmdModifyShadow {
+		return
+	}
+	if err := p.UpdateShadow(generateCmdShadowFile, generateCmdShadowUser); err != nil {
+		fmt.Fprintf(os.Stderr, "Error updating shadow: %s\n", err)
+		os.Exit(1)
+	}
 }
