@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"text/template"
 
+	"github.com/google/renameio/v2"
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 
@@ -34,6 +37,8 @@ mode number:
 	generateCmdShadowFile      string
 	generateCmdShadowUser      string
 	generateCmdSharedTokenFile string
+	generateCmdIssueTemplate   string
+	generateCmdIssueFile       string
 )
 
 func init() {
@@ -43,6 +48,8 @@ func init() {
 	generateCmd.Flags().StringVarP(&generateCmdShadowFile, "shadow", "f", "/etc/shadow", "Shadow file location")
 	generateCmd.Flags().StringVarP(&generateCmdSharedTokenFile, "shared-token", "t", "/usr/share/potd/shared_token", "Shared token file location")
 	generateCmd.Flags().StringVarP(&generateCmdShadowUser, "user", "u", "root", "User to update")
+	generateCmd.Flags().StringVarP(&generateCmdIssueTemplate, "issue-tpl", "", "/etc/issue.tpl", "Issue file template")
+	generateCmd.Flags().StringVarP(&generateCmdIssueFile, "issue", "", "/etc/issue", "Issue file")
 	rootCmd.AddCommand(generateCmd)
 }
 
@@ -67,4 +74,20 @@ func generateCmdRun(c *cobra.Command, args []string) {
 		fmt.Fprintf(os.Stderr, "Error updating shadow: %s\n", err)
 		os.Exit(1)
 	}
+
+	tpl, err := template.ParseFiles(generateCmdIssueTemplate)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Not updating %s; Error parsing the issue template: %s\n", generateCmdIssueFile, err)
+		return
+	}
+	var buf bytes.Buffer
+	if err := tpl.Execute(&buf, token); err != nil {
+		fmt.Fprintf(os.Stderr, "Error executing template: %s\n", err)
+		os.Exit(1)
+	}
+	if err := renameio.WriteFile(generateCmdIssueFile, buf.Bytes(), 0644); err != nil {
+		fmt.Fprintf(os.Stderr, "Error writing %s: %s\n", generateCmdIssueFile, err)
+		os.Exit(1)
+	}
+	fmt.Println("Update Complete")
 }
