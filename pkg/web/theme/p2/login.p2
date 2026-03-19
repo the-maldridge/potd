@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/theme.css" />
+    <title>Password of the Day</title>
+  </head>
+  <body>
+    <div class="grid-center">
+      <div>
+        <form method="POST">
+          <table>
+            <tr>
+              <td><label for="username">Username:</label></td>
+              <td><input type="text" name="username" /></td>
+            </tr>
+
+            <tr>
+              <td><label for="password">Password:</label></td>
+              <td><input type="password" name="password" /></td>
+            </tr>
+
+            <tr>
+              <td colspan="2" class="center"><input type="submit" value="Authenticate" /></td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

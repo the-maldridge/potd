@@ -1,0 +1,19 @@
+{% extends "../../base.p2" %}
+
+{% block title %}Decode | POTD{% endblock %}
+
+{% block content %}
+<div class="grid-center">
+  <div>
+    <form class="center" method="POST">
+      <input type="text" name="hostname" placeholder="hostname" /><br /><br />
+      <input type="text" name="challenge" placeholder="challenge" /><br /><br />
+      <select name="password_type">
+        <option value="1">Random Hex</option>
+      </select>
+      <input type="number" name="size" value="24" /><br /><br />
+      <input type="submit" value="Decode" />
+    </form>
+  </div>
+</div>
+{% endblock %}
