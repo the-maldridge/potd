@@ -1,6 +1,6 @@
 {% extends "../../base.p2" %}
 
-{% block title %}Decode | POTD{% endblock %}
+{% block title %}Resolve | POTD{% endblock %}
 
 {% block content %}
 <div class="grid-center">
@@ -12,7 +12,7 @@
         <option value="1">Random Hex</option>
       </select>
       <input type="number" name="size" value="24" /><br /><br />
-      <input type="submit" value="Decode" />
+      <input type="submit" value="Resolve" />
     </form>
   </div>
 </div>

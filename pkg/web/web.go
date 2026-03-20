@@ -58,12 +58,17 @@ func New() (*Server, error) {
 	s.r.Route("/ui", func(r chi.Router) {
 		r.Use(basic.LoginHandler("/login"))
 		r.Get("/", s.uiViewLanding)
-		r.Get("/decode", s.uiViewDecodeForm)
-		r.Post("/decode", s.uiViewDecode)
+		r.Get("/resolve", s.uiViewResolveForm)
+		r.Post("/resolve", s.uiViewResolve)
+	})
+
+	s.r.Route("/api", func(r chi.Router) {
+		r.Use(basic.BasicHandler)
+		r.Get("/resolve/{host}/{challenge}", s.apiResolvePassword)
 	})
 
 	s.r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/ui/decode", http.StatusSeeOther)
+		http.Redirect(w, r, "/ui/resolve", http.StatusSeeOther)
 	})
 
 	return s, nil
