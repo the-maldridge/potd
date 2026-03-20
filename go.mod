@@ -3,17 +3,24 @@ module github.com/the-maldridge/potd
 go 1.25.0
 
 require (
+	github.com/flosch/pongo2/v6 v6.0.0
+	github.com/go-chi/chi/v5 v5.2.5
+	github.com/go-crypt/crypt v0.4.10
+	github.com/google/renameio/v2 v2.0.2
+	github.com/spf13/cobra v1.10.2
+	github.com/the-maldridge/authware v0.1.5
+	github.com/the-maldridge/shadow v0.0.0-20200412024210-2a130b9cd238
+	github.com/the-maldridge/wordlist v0.0.0-20260320192322-afe3f6b30296
+)
+
+require (
 	github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358 // indirect
 	github.com/GehirnInc/crypt v0.0.0-20230320061759-8cc1b52080c5 // indirect
-	github.com/flosch/pongo2/v6 v6.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.8-0.20250403174932-29230038a667 // indirect
-	github.com/go-chi/chi/v5 v5.2.5 // indirect
-	github.com/go-crypt/crypt v0.4.10 // indirect
 	github.com/go-crypt/x v0.4.13 // indirect
 	github.com/go-ldap/ldap/v3 v3.4.11 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
-	github.com/google/renameio/v2 v2.0.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/go-hclog v0.9.2 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -25,13 +32,10 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.12.0 // indirect
 	github.com/spf13/cast v1.7.1 // indirect
-	github.com/spf13/cobra v1.10.2 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 	github.com/spf13/viper v1.20.1 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tg123/go-htpasswd v1.2.4 // indirect
-	github.com/the-maldridge/authware v0.1.5 // indirect
-	github.com/the-maldridge/shadow v0.0.0-20200412024210-2a130b9cd238 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect

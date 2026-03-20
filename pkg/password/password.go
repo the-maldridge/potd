@@ -6,6 +6,8 @@ import (
 	"encoding/hex"
 	"math/rand/v2"
 	"strings"
+
+	"github.com/the-maldridge/wordlist"
 )
 
 type Mode uint8
@@ -15,6 +17,11 @@ const (
 	// password comprised of a string of upper case hex
 	// characters.
 	PasswordModeRandomHex Mode = iota + 1
+
+	// PasswordModeXKCD is used to specify that we want a password
+	// comprised of a string of random words joined by hyphens, a
+	// la https://xkcd.com/936/
+	PasswordModeXKCD
 )
 
 type Password struct {
@@ -47,6 +54,8 @@ func (p *Password) generate() {
 	switch p.mode {
 	case PasswordModeRandomHex:
 		p.generateRandomHex(r)
+	case PasswordModeXKCD:
+		p.generateXKCD(r)
 	}
 }
 
@@ -56,4 +65,13 @@ func (p *Password) generateRandomHex(r *rand.Rand) {
 		b[i] = byte(r.UintN(256))
 	}
 	p.pass = strings.ToUpper(hex.EncodeToString(b))
+}
+
+func (p *Password) generateXKCD(r *rand.Rand) {
+	parts := make([]string, p.size)
+	max := len(wordlist.Words)
+	for i := range parts {
+		parts[i] = wordlist.Words[r.IntN(max)]
+	}
+	p.pass = strings.Join(parts, "-")
 }

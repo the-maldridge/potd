@@ -37,6 +37,7 @@ func (s *Server) uiViewResolve(w http.ResponseWriter, r *http.Request) {
 	content, err := os.ReadFile(s.tokenPath)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		slog.Error("Could not load shared token", "error", err)
 		return
 	}
 	components := []string{r.FormValue("hostname"), r.FormValue("challenge"), string(content)}
@@ -58,12 +59,12 @@ func (s *Server) apiResolvePassword(w http.ResponseWriter, r *http.Request) {
 
 	size, err := strconv.Atoi(r.URL.Query().Get("size"))
 	if err != nil {
-		size = 24
+		size = 5
 	}
 
 	kindID, err := strconv.Atoi(r.URL.Query().Get("password_type"))
 	if err != nil {
-		kindID = 1
+		kindID = 2
 	}
 	kind := password.Mode(kindID)
 

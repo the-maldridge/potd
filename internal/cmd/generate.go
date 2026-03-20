@@ -7,7 +7,6 @@ import (
 	"text/template"
 
 	"github.com/google/renameio/v2"
-	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 
 	"github.com/the-maldridge/potd/pkg/password"
@@ -30,6 +29,7 @@ Several password modes are supported and can be specified by their
 mode number:
 
   1 - Random Hexadecimal String
+  2 - XKCD Style Multi-Word String
 `
 	generateCmdPasswdSize      int
 	generateCmdPasswdMode      uint8
@@ -42,8 +42,8 @@ mode number:
 )
 
 func init() {
-	generateCmd.Flags().IntVarP(&generateCmdPasswdSize, "size", "s", 24, "Size of the password to generate")
-	generateCmd.Flags().Uint8VarP(&generateCmdPasswdMode, "mode", "m", 1, "Mode of password generation")
+	generateCmd.Flags().IntVarP(&generateCmdPasswdSize, "size", "s", 5, "Size of the password to generate")
+	generateCmd.Flags().Uint8VarP(&generateCmdPasswdMode, "mode", "m", 2, "Mode of password generation")
 	generateCmd.Flags().BoolVarP(&generateCmdModifyShadow, "apply-shadow", "w", false, "Modify the shadow file")
 	generateCmd.Flags().StringVarP(&generateCmdShadowFile, "shadow", "f", "/etc/shadow", "Shadow file location")
 	generateCmd.Flags().StringVarP(&generateCmdSharedTokenFile, "shared-token", "t", "/usr/share/potd/shared_token", "Shared token file location")
@@ -55,7 +55,7 @@ func init() {
 
 func generateCmdRun(c *cobra.Command, args []string) {
 	name, _ := os.Hostname()
-	token := uuid.New().String()
+	token := password.ChallengeToken(4)
 
 	content, err := os.ReadFile(generateCmdSharedTokenFile)
 	if err != nil {

@@ -35,8 +35,8 @@ mode number:
 )
 
 func init() {
-	resolveCmd.Flags().IntVarP(&resolveCmdPasswdSize, "size", "s", 24, "Size of the password to resolve")
-	resolveCmd.Flags().Uint8VarP(&resolveCmdPasswdMode, "mode", "m", 1, "Mode of password generation")
+	resolveCmd.Flags().IntVarP(&resolveCmdPasswdSize, "size", "s", 5, "Size of the password to resolve")
+	resolveCmd.Flags().Uint8VarP(&resolveCmdPasswdMode, "mode", "m", 2, "Mode of password generation")
 	resolveCmd.Flags().StringVarP(&resolveCmdSharedTokenFile, "shared-token", "t", "/usr/share/potd/shared_token", "Shared token file location")
 	rootCmd.AddCommand(resolveCmd)
 }
