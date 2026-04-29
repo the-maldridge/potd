@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/flosch/pongo2/v6"
@@ -34,13 +33,10 @@ func (s *Server) uiViewResolve(w http.ResponseWriter, r *http.Request) {
 	}
 	kind := password.Mode(kindID)
 
-	content, err := os.ReadFile(s.tokenPath)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		slog.Error("Could not load shared token", "error", err)
-		return
+	components := []string{
+		r.FormValue("hostname"),
+		r.FormValue("challenge"),
 	}
-	components := []string{r.FormValue("hostname"), r.FormValue("challenge"), string(content)}
 
 	p := password.New(components, kind, size)
 
@@ -68,12 +64,10 @@ func (s *Server) apiResolvePassword(w http.ResponseWriter, r *http.Request) {
 	}
 	kind := password.Mode(kindID)
 
-	content, err := os.ReadFile(s.tokenPath)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+	components := []string{
+		host,
+		challenge,
 	}
-	components := []string{host, challenge, string(content)}
 
 	p := password.New(components, kind, size)
 

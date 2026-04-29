@@ -1,5 +1,7 @@
-potd
+.htpasswd
+.htgroup
+*.db
 *.txt
 issue*
-shadow
-.ht*
+*.pem
+*.csr

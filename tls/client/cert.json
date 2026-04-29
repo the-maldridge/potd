@@ -1,0 +1,17 @@
+{
+    "CN": "client.example.com",
+    "hosts": [
+        "client.example.com"
+    ],
+    "key": {
+        "algo": "ecdsa",
+        "size": 256
+    },
+    "names": [
+        {
+            "C": "Client",
+            "O": "Example Systems",
+            "OU": "Security Infrastructure"
+        }
+    ]
+}

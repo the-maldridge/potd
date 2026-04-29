@@ -83,10 +83,16 @@ github.com/jcmturner/gokrb5/v8 v8.4.4 h1:x1Sv4HaTpepFkXbt2IkL29DXRf8sOfZXo8eRKh6
 github.com/jcmturner/gokrb5/v8 v8.4.4/go.mod h1:1btQEpgT6k+unzCwX1KdWMEwPPkkgBtP+F6aCACiMrs=
 github.com/jcmturner/rpc/v2 v2.0.3 h1:7FXXj8Ti1IaVFpSAziCZWNzbNuZmnvw/i6CqLNdWfZY=
 github.com/jcmturner/rpc/v2 v2.0.3/go.mod h1:VUJYCIDm3PVOEHw8sgt091/20OJjskO/YJki3ELg/Hc=
+github.com/jinzhu/inflection v1.0.0 h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD/E=
+github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc=
+github.com/jinzhu/now v1.1.5 h1:/o9tlHleP7gOFmsnYNz3RGnqzefHA47wQpKrrdTIwXQ=
+github.com/jinzhu/now v1.1.5/go.mod h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
 github.com/kr/text v0.2.0/go.mod h1:eLer722TekiGuMkidMxC/pM04lWEeraHUUmBw8l2grE=
+github.com/mattn/go-sqlite3 v1.14.22 h1:2gZY6PC6kBnID23Tichd1K+Z0oS6nE/XwU+Vz/5o4kU=
+github.com/mattn/go-sqlite3 v1.14.22/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=
 github.com/meehow/securebytes v0.3.1 h1:L/pqjtjhRWirLhFBCR1yGjtX4wadCMtgPIPGHB3c/oU=
 github.com/meehow/securebytes v0.3.1/go.mod h1:DPcV5vRn9ooDh60DXySIZ1dbf7m7Rhq3yCi8tfZuHkI=
 github.com/netauth/netauth v0.6.2 h1:Gtx/Xxa6YUaGny+iVvWyp+FAmtLQ1IlbB2uWTZEpWxQ=
@@ -127,6 +133,8 @@ github.com/tg123/go-htpasswd v1.2.4 h1:HgH8KKCjdmo7jjXWN9k1nefPBd7Be3tFCTjc2jPra
 github.com/tg123/go-htpasswd v1.2.4/go.mod h1:EKThQok9xHkun6NBMynNv6Jmu24A33XdZzzl4Q7H1+0=
 github.com/the-maldridge/authware v0.1.5 h1:FiF2cpyYo2pdCDFTjdTnCxHn5LAZS5zvnosINAz10jM=
 github.com/the-maldridge/authware v0.1.5/go.mod h1:lqmVd8Jbr+8mF9yCShdM04D7QvpZR971iI6HedlZn0Q=
+github.com/the-maldridge/authware v0.1.6-0.20251009043904-ea40e49f89ff h1:V1vTKxLipoW32JhryFm4jC6U9ZHbcFTI/W5amEYD6s0=
+github.com/the-maldridge/authware v0.1.6-0.20251009043904-ea40e49f89ff/go.mod h1:lqmVd8Jbr+8mF9yCShdM04D7QvpZR971iI6HedlZn0Q=
 github.com/the-maldridge/shadow v0.0.0-20200412024210-2a130b9cd238 h1:uMPBlyiZrXpWWtreY4Js/J41MySRrLqX8JFGI1I1UeM=
 github.com/the-maldridge/shadow v0.0.0-20200412024210-2a130b9cd238/go.mod h1:ww1puOFpZfmZv6dsG5bzmfnL/eUmxGCznniPN1sa95A=
 github.com/the-maldridge/wordlist v0.0.0-20260320192322-afe3f6b30296 h1:aZeNk/YaARVODG9OPG7o9wEX+NDenTChlGoTa4vfJao=
@@ -213,5 +221,9 @@ gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c/go.mod h1:JHkPIbrfpd72SG/EV
 gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
 gopkg.in/yaml.v3 v3.0.1/go.mod h1:K4uyk7z7BCEPqu6E+C64Yfv1cQ7kz7rIZviUmN+EgEM=
+gorm.io/driver/sqlite v1.6.0 h1:WHRRrIiulaPiPFmDcod6prc4l2VGVWHz80KspNsxSfQ=
+gorm.io/driver/sqlite v1.6.0/go.mod h1:AO9V1qIQddBESngQUKWL9yoH93HIeA1X6V633rBwyT8=
+gorm.io/gorm v1.31.1 h1:7CA8FTFz/gRfgqgpeKIBcervUn3xSyPUmr6B2WXJ7kg=
+gorm.io/gorm v1.31.1/go.mod h1:XyQVbO2k6YkOis7C2437jSit3SsDK72s7n7rsSHd+Gs=
 honnef.co/go/tools v0.0.0-20190102054323-c2f93a96b099/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=
 honnef.co/go/tools v0.0.0-20190523083050-ea95bdfd59fc/go.mod h1:rf3lG4BRIbNafJWhAfAdb/ePZxsR/4RtNHQocxwk9r4=

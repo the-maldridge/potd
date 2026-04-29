@@ -13,7 +13,10 @@ import (
 	_ "github.com/the-maldridge/authware/backend/htpasswd"
 	_ "github.com/the-maldridge/authware/backend/ldap"
 	_ "github.com/the-maldridge/authware/backend/netauth"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 
+	"github.com/the-maldridge/potd/pkg/types"
 	"github.com/the-maldridge/potd/pkg/web"
 )
 
@@ -49,7 +52,47 @@ func serveCmdRun(c *cobra.Command, args []string) {
 		&slog.HandlerOptions{Level: level}))
 	slog.SetDefault(logger)
 
-	w, err := web.New()
+	opts := []web.Option{
+		web.WithTrimPrefix(os.Getenv("POTD_TRIM_PREFIX")),
+		web.WithTrimSuffix(os.Getenv("POTD_TRIM_SUFFIX")),
+	}
+	bind := os.Getenv("POTD_ADDR")
+	if bind == "" {
+		opts = append(opts, web.WithBind(bind))
+	}
+
+	if path, ok := os.LookupEnv("POTD_DEBUG"); ok {
+		opts = append(opts, web.WithTemplatePath(path))
+	}
+
+	caCert := os.Getenv("POTD_CLIENT_CA")
+	if caCert == "" {
+		caCert = "client-ca.pem"
+	}
+	opts = append(opts, web.WithClientCA(caCert))
+
+	var d *gorm.DB
+	driver := strings.ToLower(os.Getenv("POTD_DB"))
+	switch driver {
+	case "sqlite":
+		fallthrough
+	default:
+		dbPath := os.Getenv("POTD_SQLITE_PATH")
+		if dbPath == "" {
+			dbPath = "potd.db"
+		}
+		var err error
+		d, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
+		if err != nil {
+			slog.Error("Error opening database", "error", err)
+			os.Exit(1)
+		}
+
+	}
+	d.AutoMigrate(&types.EscrowedToken{})
+	opts = append(opts, web.WithDB(d))
+
+	w, err := web.New(opts...)
 	if err != nil {
 		slog.Error("Error initializing server", "error", err)
 		os.Exit(1)
@@ -78,10 +121,14 @@ func serveCmdRun(c *cobra.Command, args []string) {
 
 	}()
 
-	bind := os.Getenv("POTD_ADDR")
-	if bind == "" {
-		bind = ":1323"
+	cert := os.Getenv("POTD_TLS_CERT")
+	if cert == "" {
+		cert = "tls.pem"
 	}
-	w.Serve(bind)
+	key := os.Getenv("POTD_TLS_KEY")
+	if key == "" {
+		key = "tls.key"
+	}
+	w.Serve(cert, key)
 	<-serverCtx.Done()
 }

@@ -18,13 +18,9 @@ import (
 //go:embed theme
 var efs embed.FS
 
-func New() (*Server, error) {
+func New(opts ...Option) (*Server, error) {
 	var tfs fs.FS
 	tfs, _ = fs.Sub(efs, "theme")
-	if path, ok := os.LookupEnv("POTD_DEBUG"); ok {
-		slog.Info("Debug mode enabled")
-		tfs = os.DirFS(path)
-	}
 	tsfs, _ := fs.Sub(tfs, "p2")
 
 	basic, err := authware.NewAuth()
@@ -32,20 +28,13 @@ func New() (*Server, error) {
 		slog.Error("Could not initialize middleware", "error", err)
 		os.Exit(2)
 	}
-	tPath := os.Getenv("POTD_SHARED_TOKEN_PATH")
-	if tPath == "" {
-		tPath = "/usr/share/potd/shared_token"
-	}
 
 	s := &Server{
-		r:         chi.NewRouter(),
-		n:         &http.Server{},
-		tokenPath: tPath,
-		tmpls:     pongo2.NewSet("html", pongo2.NewFSLoader(tsfs)),
-	}
-
-	if _, ok := os.LookupEnv("POTD_DEBUG"); ok {
-		s.tmpls.Debug = true
+		r: chi.NewRouter(),
+		n: &http.Server{
+			Addr: ":1323",
+		},
+		tmpls: pongo2.NewSet("html", pongo2.NewFSLoader(tsfs)),
 	}
 
 	s.r.Use(middleware.Heartbeat("/-/alive"))
@@ -62,24 +51,31 @@ func New() (*Server, error) {
 		r.Post("/resolve", s.uiViewResolve)
 	})
 
-	s.r.Route("/api", func(r chi.Router) {
+	s.r.Route("/api/resolve", func(r chi.Router) {
 		r.Use(basic.BasicHandler)
-		r.Get("/resolve/{host}/{challenge}", s.apiResolvePassword)
+		r.Get("/{host}/{challenge}", s.apiResolvePassword)
+	})
+
+	s.r.Route("/api/escrow", func(r chi.Router) {
+		r.Post("/update-token", s.apiUpdateToken)
 	})
 
 	s.r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/ui/resolve", http.StatusSeeOther)
 	})
 
+	for _, o := range opts {
+		o(s)
+	}
+
 	return s, nil
 }
 
 // Serve binds, initializes the mux, and serves forever.
-func (s *Server) Serve(bind string) error {
-	slog.Info("HTTP is starting", "bind", bind)
-	s.n.Addr = bind
+func (s *Server) Serve(cert, key string) error {
+	slog.Info("HTTP is starting", "bind", s.n.Addr)
 	s.n.Handler = s.r
-	return s.n.ListenAndServe()
+	return s.n.ListenAndServeTLS(cert, key)
 }
 
 // Shutdown requests the underlying server gracefully cease operation.
