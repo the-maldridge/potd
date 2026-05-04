@@ -129,6 +129,9 @@ func serveCmdRun(c *cobra.Command, args []string) {
 	if key == "" {
 		key = "tls.key"
 	}
-	w.Serve(cert, key)
+	if err := w.Serve(cert, key); err != nil {
+		slog.Error("Error initializing server", "error", err)
+		os.Exit(1)
+	}
 	<-serverCtx.Done()
 }
