@@ -27,6 +27,7 @@ func WithTrimSuffix(suffix string) Option {
 func WithBind(bind string) Option {
 	return func(s *Server) {
 		s.n.Addr = bind
+		slog.Debug("Bind address set", "bind", bind)
 	}
 }
 

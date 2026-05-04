@@ -56,8 +56,8 @@ func serveCmdRun(c *cobra.Command, args []string) {
 		web.WithTrimPrefix(os.Getenv("POTD_TRIM_PREFIX")),
 		web.WithTrimSuffix(os.Getenv("POTD_TRIM_SUFFIX")),
 	}
-	bind := os.Getenv("POTD_ADDR")
-	if bind == "" {
+	bind := os.Getenv("POTD_BIND")
+	if bind != "" {
 		opts = append(opts, web.WithBind(bind))
 	}
 
