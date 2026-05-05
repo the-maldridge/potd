@@ -48,6 +48,7 @@ mode number:
 	generateCmdClientKey     string
 	generateCmdResolverHost  string
 	generateCmdInsecureTLS   bool
+	generateCmdDebug         bool
 )
 
 func init() {
@@ -62,6 +63,7 @@ func init() {
 	generateCmd.Flags().StringVarP(&generateCmdClientKey, "key", "", "", "Client Certificate Key")
 	generateCmd.Flags().StringVarP(&generateCmdResolverHost, "resolver", "", "", "Resolver instance to update escrowed tokens")
 	generateCmd.Flags().BoolVarP(&generateCmdInsecureTLS, "insecure-tls", "", false, "Skip TLS verification (INSECURE)")
+	generateCmd.Flags().BoolVarP(&generateCmdDebug, "debug", "", false, "Print additional debugging information")
 	rootCmd.AddCommand(generateCmd)
 }
 
@@ -79,6 +81,9 @@ func generateCmdRun(c *cobra.Command, args []string) {
 	p := password.New(components, password.Mode(generateCmdPasswdMode), generateCmdPasswdSize)
 	fmt.Println("Password: ", p)
 	fmt.Println("Token: ", challenge)
+	if generateCmdDebug {
+		fmt.Println("Escrow: ", e.Token)
+	}
 
 	cert, err := tls.LoadX509KeyPair(generateCmdClientCert, generateCmdClientKey)
 	if err != nil {
