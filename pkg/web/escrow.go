@@ -34,9 +34,13 @@ func (s *Server) apiUpdateToken(w http.ResponseWriter, r *http.Request) {
 	}
 	et.Updated = time.Now()
 
-	host = strings.TrimPrefix(strings.TrimPrefix(host, s.trimSuffix), s.trimPrefix)
+	if s.trimPrefix != "" || s.trimSuffix != "" {
+		slog.Debug("Trimming host identity", "prefix", s.trimPrefix, "suffix", s.trimSuffix, "host", host)
+		host = strings.TrimPrefix(strings.TrimSuffix(host, s.trimSuffix), s.trimPrefix)
+	}
 	if host != et.Host {
 		w.WriteHeader(http.StatusUnauthorized)
+		slog.Warn("Host does not match identity", "host", et.Host, "identity", host)
 		fmt.Fprintf(w, "Host does not match identity: %s != %s\n", host, et.Host)
 		return
 	}
