@@ -9,8 +9,10 @@ import (
 	"github.com/flosch/pongo2/v6"
 	"github.com/go-chi/chi/v5"
 	"github.com/the-maldridge/authware"
+	"gorm.io/gorm"
 
 	"github.com/the-maldridge/potd/pkg/password"
+	"github.com/the-maldridge/potd/pkg/types"
 )
 
 func (s *Server) uiViewResolveForm(w http.ResponseWriter, r *http.Request) {
@@ -64,9 +66,17 @@ func (s *Server) apiResolvePassword(w http.ResponseWriter, r *http.Request) {
 	}
 	kind := password.Mode(kindID)
 
+	eToken, err := gorm.G[types.EscrowedToken](s.d).Where(&types.EscrowedToken{Host: host}).First(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("no host found"))
+		return
+	}
+
 	components := []string{
 		host,
 		challenge,
+		eToken.Token,
 	}
 
 	p := password.New(components, kind, size)
