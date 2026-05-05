@@ -35,10 +35,21 @@ func (s *Server) uiViewResolve(w http.ResponseWriter, r *http.Request) {
 	}
 	kind := password.Mode(kindID)
 
+	eToken, err := gorm.G[types.EscrowedToken](s.d).
+		Where(&types.EscrowedToken{Host: r.FormValue("hostname")}).
+		First(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("no host found"))
+		return
+	}
+
 	components := []string{
 		r.FormValue("hostname"),
 		r.FormValue("challenge"),
+		eToken.Token,
 	}
+	slog.Debug("Resolving from componenents", "components", components)
 
 	p := password.New(components, kind, size)
 
@@ -66,7 +77,9 @@ func (s *Server) apiResolvePassword(w http.ResponseWriter, r *http.Request) {
 	}
 	kind := password.Mode(kindID)
 
-	eToken, err := gorm.G[types.EscrowedToken](s.d).Where(&types.EscrowedToken{Host: host}).First(r.Context())
+	eToken, err := gorm.G[types.EscrowedToken](s.d).
+		Where(&types.EscrowedToken{Host: host}).
+		First(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("no host found"))
@@ -78,6 +91,7 @@ func (s *Server) apiResolvePassword(w http.ResponseWriter, r *http.Request) {
 		challenge,
 		eToken.Token,
 	}
+	slog.Debug("Resolving from componenents", "components", components)
 
 	p := password.New(components, kind, size)
 
