@@ -5,9 +5,7 @@ import (
 )
 
 type EscrowedToken struct {
-	ID uint
-
+	Host    string `gorm:"primaryKey"`
 	Token   string
-	Host    string
 	Updated time.Time
 }
