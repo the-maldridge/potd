@@ -13,3 +13,4 @@ FROM scratch
 COPY --from=build /build/potd potd
 USER 1000
 ENTRYPOINT ["/potd", "serve"]
+LABEL LABEL org.opencontainers.image.source="https://github.com/the-maldridge/potd"
