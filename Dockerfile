@@ -9,7 +9,11 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     strip potd && \
     upx potd
 
+FROM docker.io/library/alpine:latest AS certs
+RUN apk --no-cache add ca-certificates
+
 FROM scratch
+COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /build/potd potd
 USER 1000
 ENTRYPOINT ["/potd", "serve"]
